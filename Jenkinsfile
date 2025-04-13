@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "kelomo2502/restaurant-app"
-        IMAGE_TAG = "v5"
+        IMAGE_TAG = "v6"
         CHART_DIR = "cafe-chart"
         RELEASE_NAME = "cafe-app"
         NAMESPACE = "default"
