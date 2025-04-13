@@ -44,16 +44,16 @@ Configure Jenkins with basic security measures suitable for beginners.
 
   echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
   <https://pkg.jenkins.io/debian-stable> binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+  /etc/apt/sources.list.d/jenkins.list > /dev/null```
 
-    sudo apt-get update
-    sudo apt-get install jenkins
+    `sudo apt-get update`
+    `sudo apt-get install jenkins`
 
-```
 
 - Simplify the plugin installation and configuration steps.
 After installation, you can access Jenkins via its default port: 8080 on your local machine by visiting [](http://localhost:8080)
 - Outline basic security measures applied to the Jenkins server.
+
 1. Create an admin user with a strong password to prevent unauthorised users and finish setup
 2. Enable global secuirity and set authentication
    Under Jenkins security realm, choose Jenkin's own user database. Hence ensure allow user to signup is unchecked unless there is a need for it.
@@ -77,7 +77,19 @@ Steps:
 **Instructions:**
 
 - Provide beginner-friendly explanations of Helm chart concepts.
+helm is a package manager for kubernetes. It simplifies kubernetes deployment and also provides easy way for rolling back deployment incase we need to
 - Include a hands-on guide for creating a simple Helm chart.
+To create charts, we would need to first intall helm by running the following commands:
+Note: We we are installing on an ubuntu machine but you can go to the official site to see how you can install for other OS
+[Install Helm](https://helm.sh/docs/intro/install/)
+
+```bash
+   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+   chmod 700 get_helm.sh
+   ./get_helm.sh
+```
+
+After installation, we can create our helm chart by running `helm create <name of chart>` in our desired folder
 
 ### Working with Helm Charts
 
@@ -85,9 +97,43 @@ Steps:
 Steps:
 
 - Deploy a sample web application using the Helm chart created.
+  In this example we are deploying a simple cafe web app template from tooplate.com. After downloading the sample app we we would create a folder call "Configuration management with helm"
+  let's see how the folder strucuture will look like:
+  Configuration-management-with-helm/
+      app/
+         Dockerfile
+      cafe-chart/
+   the app directory contains all our app and other folders and files needed to run the website while our cafe-chart contains our helm chart created from runnig `helm install cafe-chart` in the root directory of our project
 - Introduce values and templates in Helm charts.
-- Explore upgrading and rolling back applications using Helm.
+  The helm install command generate a scaffold for our helm packgaes aand files needed to use our helm chart but we would focus more on the values.yaml and deployment.yaml at this stage
 
+  We would edit the image part of the values.yaml to use the image we would be building from our app after we specified our Dockerfile in the app directory.
+  Our Dockerfile looks something like this:
+
+```DSL
+FROM nginx:alpine
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+  ```
+
+we can build the docker image by running
+`docker build -t docker-username/image-name:tag .`
+we can push the image by running:
+`docker push docker-username/image-name:tag`
+Note: you need to login to your dockerhub account by runnig `docker login` The follow the prompt
+
+- Explore upgrading and rolling back applications using Helm.
+  Having created the helm chart and editing our values.yaml and deployment.yaml file to use our docker image, we can upgrade our helm deployment by running:
+  `helm upgrade --install name-of release chart-directory`
+  A rollback can be achieved in the similar version from the CLI by first running helm list
+  
 - Instructions:
 - Include simple examples and explanations for deploying applications with Helm.
 
